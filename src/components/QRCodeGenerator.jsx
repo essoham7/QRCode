@@ -7,7 +7,7 @@ const QRCodeGenerator = () => {
   const [bgColor, setBgColor] = useState('#FFFFFF');
   const [logo, setLogo] = useState(null);
   const [size, setSize] = useState(200); 
-  const [extension, setExtension] = useState('png'); // 
+  // const [extension, setExtension] = useState('png'); 
   const handleTextChange = (e) => {
     setText(e.target.value);
   };
@@ -29,16 +29,16 @@ const QRCodeGenerator = () => {
     setSize(parseInt(e.target.value));
   };
 
-  const handleExtensionChange = (e) => {
-    setExtension(e.target.value);
-  };
+  // const handleExtensionChange = (e) => {
+  //   setExtension(e.target.value);
+  // };
 
   const handleDownloadQRCode = () => {
     const canvas = document.querySelector('canvas');
-    const dataURL = canvas.toDataURL(`image/${extension}`);
+    const dataURL = canvas.toDataURL(`image`);
     const link = document.createElement('a');
     link.href = dataURL;
-    link.download = `qrcode.${extension}`;
+    link.download = `qrcode.png`;
     link.click();
   };
 
@@ -100,15 +100,15 @@ const QRCodeGenerator = () => {
       </div>
 
       </div>
-      <div className="mb-4 flex justify-center">
+      {/* <div className="mb-4 flex justify-center">
         <label className="mb-2 tracking-tight sm:text-3xl md:text-2xl text-gray-900">Extension :</label>
         <select value={extension} onChange={handleExtensionChange} className="w-full p-2 border border-gray-300 rounded-md">
           <option value="png">PNG</option>
-          {/* <option disabled value="eps">EPS</option>
+          <option disabled value="eps">EPS</option>
           <option disabled value="pdf">PDF</option>
-          <option disabled value="svg">SVG</option> */}
+          <option disabled value="svg">SVG</option>
         </select>
-      </div>
+      </div> */}
       <div className="mb-4 flex justify-center img-container">
         <QRCode
           value={text}
@@ -116,7 +116,7 @@ const QRCodeGenerator = () => {
           bgColor={bgColor}
           logoImage={logo}
           size={size}
-          extension={extension}
+  
         />
       </div>
       <div>
