@@ -116,6 +116,7 @@ const QRCodeGenerator = () => {
           bgColor={bgColor}
           logoImage={logo}
           size={size}
+          extension={extension}
         />
       </div>
       <div>
