@@ -7,6 +7,7 @@ const QRCodeGenerator = () => {
   const [bgColor, setBgColor] = useState('#FFFFFF');
   const [logo, setLogo] = useState(null);
   const [size, setSize] = useState(200); 
+  const logoSizeRatio = 1 / 9; 
   // const [extension, setExtension] = useState('png'); 
   const handleTextChange = (e) => {
     setText(e.target.value);
@@ -33,15 +34,50 @@ const QRCodeGenerator = () => {
   //   setExtension(e.target.value);
   // };
 
+  // const handleDownloadQRCode = () => {
+  //   const canvas = document.querySelector('canvas');
+  //   const dataURL = canvas.toDataURL(`image`);
+  //   const link = document.createElement('a');
+  //   link.href = dataURL;
+  //   link.download = `qrcode.png`;
+  //   link.click();
+  // };
+
   const handleDownloadQRCode = () => {
-    const canvas = document.querySelector('canvas');
-    const dataURL = canvas.toDataURL(`image`);
+    const qrCodeContainer = document.querySelector('.qr-code-container');
+    const canvas = qrCodeContainer.querySelector('canvas');
+
+    // Create a new canvas to merge the QR code and logo
+    const mergedCanvas = document.createElement('canvas');
+    mergedCanvas.width = canvas.width;
+    mergedCanvas.height = canvas.height;
+    const mergedContext = mergedCanvas.getContext('2d');
+
+    // Draw the QR code on the merged canvas
+    mergedContext.drawImage(canvas, 0, 0);
+
+    if (logo) {
+      // Load the logo image
+      const logoImage = new Image();
+      logoImage.src = logo;
+
+      // Calculate the position to center the logo on the QR code
+      const x = (canvas.width - size) / 2;
+      const y = (canvas.height - size) / 2;
+
+      // Draw the logo on the merged canvas as a watermark
+      mergedContext.drawImage(logoImage, x, y, size, size);
+    }
+
+    // Convert the merged canvas to a data URL and trigger the download
+    const dataURL = mergedCanvas.toDataURL('image/png');
     const link = document.createElement('a');
     link.href = dataURL;
-    link.download = `qrcode.png`;
+    link.download = 'qrcode_with_logo.png';
     link.click();
   };
 
+  
   return (
     <div className="container mx-auto py-8">
       <div className="mb-4 flex justify-center">
@@ -109,7 +145,10 @@ const QRCodeGenerator = () => {
           <option disabled value="svg">SVG</option>
         </select>
       </div> */}
-      <div className="mb-4 flex justify-center img-container">
+
+
+
+      {/* <div className="mb-4 flex justify-center img-container">
         <QRCode
           value={text}
           fgColor={color}
@@ -118,7 +157,21 @@ const QRCodeGenerator = () => {
           size={size}
   
         />
+      </div> */}
+
+
+      <div className="mb-4 flex justify-center qr-code-container">
+        <QRCode
+          value={text}
+          fgColor={color}
+          bgColor={bgColor}
+          size={size}
+        />
+        {logo && (
+          <img src={logo} alt="Logo" className="absolute inset-0 w-24 h-24 m-auto" style={{ width: `${size * logoSizeRatio}px`, height: `${size * logoSizeRatio}px` }} />
+        )}
       </div>
+
       <div>
         <button
           onClick={handleDownloadQRCode}
